@@ -1,0 +1,6 @@
+{
+  "name": "Surf South Africa",
+  "description": "South African coastal surf guide with GPS spot finding, live swell forecasts, stay & eat booking integration, 3-tier sponsor tiers, push swell alerts, and community wave reports.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

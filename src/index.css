@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/* Typography font configuration */
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Sun-Bleached (High-Contrast Daytime Beach Mode) Overrides */
+html.sun-bleached {
+  color-scheme: light;
+}
+
+html.sun-bleached body,
+html.sun-bleached .theme-canvas {
+  background-color: #f7f9fa !important;
+  color: #0f172a !important;
+}
+
+/* Header & navigation in Sun-Bleached */
+html.sun-bleached header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+html.sun-bleached header h1,
+html.sun-bleached header h2,
+html.sun-bleached header span.text-white {
+  color: #0f172a !important;
+}
+
+/* Cards & panels in Sun-Bleached */
+html.sun-bleached .bg-slate-900,
+html.sun-bleached .bg-slate-900\/80,
+html.sun-bleached .bg-slate-900\/90,
+html.sun-bleached .bg-slate-900\/60 {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.sun-bleached .bg-slate-950,
+html.sun-bleached .bg-slate-950\/80,
+html.sun-bleached .bg-slate-950\/70,
+html.sun-bleached .bg-slate-950\/60,
+html.sun-bleached .bg-slate-950\/40 {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.sun-bleached .bg-slate-800,
+html.sun-bleached .bg-slate-800\/80 {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+/* Borders in Sun-Bleached */
+html.sun-bleached .border-slate-800,
+html.sun-bleached .border-slate-800\/80,
+html.sun-bleached .border-slate-800\/60,
+html.sun-bleached .border-slate-700,
+html.sun-bleached .border-slate-700\/80 {
+  border-color: #cbd5e1 !important;
+}
+
+/* Typography text colors in Sun-Bleached */
+html.sun-bleached .text-white {
+  color: #0f172a !important;
+}
+
+html.sun-bleached .text-slate-100 {
+  color: #0f172a !important;
+}
+
+html.sun-bleached .text-slate-200 {
+  color: #1e293b !important;
+}
+
+html.sun-bleached .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.sun-bleached .text-slate-400 {
+  color: #64748b !important;
+}
+
+html.sun-bleached .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Hero card gradient adjustment in Sun-Bleached */
+html.sun-bleached .from-slate-900.via-slate-900\/90.to-teal-950\/40 {
+  background-image: linear-gradient(to bottom right, #ffffff, #f8fafc, #f0fdfa) !important;
+  border-color: #0d9488 !important;
+}
+
+/* Inputs and controls in Sun-Bleached */
+html.sun-bleached input,
+html.sun-bleached select,
+html.sun-bleached textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
+}
+
+html.sun-bleached input::placeholder,
+html.sun-bleached textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Footers and modals */
+html.sun-bleached footer {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.sun-bleached .theme-modal-card {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* Safe area support for mobile */
+@supports (padding: max(0px)) {
+  .safe-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}
