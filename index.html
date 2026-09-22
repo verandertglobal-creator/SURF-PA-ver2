@@ -12,8 +12,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cabinet+Grotesk:wght@700;800;900&display=swap" rel="stylesheet">
+    <script>
+      // Automatically redirect to trailing slash if opened on GitHub Pages without trailing slash
+      // Prevents 404 on relative asset paths
+      (function() {
+        var p = window.location.pathname;
+        if (p.length > 1 && !p.endsWith('/') && !p.split('/').pop().includes('.')) {
+          window.location.replace(p + '/' + window.location.search + window.location.hash);
+        }
+      })();
+    </script>
   </head>
   <body class="bg-slate-950 text-slate-100 antialiased selection:bg-teal-500 selection:text-slate-950">
+    <noscript>
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #020617; color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;">
+        <div>
+          <h1 style="font-size: 24px; margin-bottom: 8px;">Surf South Africa</h1>
+          <p style="color: #94a3b8;">JavaScript is required to run this application. Please enable JavaScript in your browser settings.</p>
+        </div>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

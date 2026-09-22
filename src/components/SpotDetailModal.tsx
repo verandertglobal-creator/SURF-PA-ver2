@@ -8,6 +8,7 @@ interface SpotDetailModalProps {
   condition: MarineCondition | null;
   discipline: SportDiscipline;
   goldSponsor?: Venue;
+  goldSurfShop?: Venue;
   nearbyVenues: Venue[];
   onClose: () => void;
   onBookVenue: (venue: Venue) => void;
@@ -22,6 +23,7 @@ export const SpotDetailModal: React.FC<SpotDetailModalProps> = ({
   condition,
   discipline,
   goldSponsor,
+  goldSurfShop,
   nearbyVenues,
   onClose,
   onBookVenue,
@@ -148,6 +150,74 @@ export const SpotDetailModal: React.FC<SpotDetailModalProps> = ({
                 className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition-colors flex items-center gap-1 cursor-pointer shadow-sm"
               >
                 <Calendar className="w-3.5 h-3.5" /> Book Direct
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Featured Gold Surf Shop Sponsor (if present and distinct) */}
+        {goldSurfShop && (!goldSponsor || goldSponsor.id !== goldSurfShop.id) && (
+          <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/10 to-transparent border border-amber-400/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md shadow-amber-950/20">
+            <div className="flex items-center gap-3">
+              <div
+                onClick={() => {
+                  if (onOpenSponsorDetail) {
+                    onClose();
+                    onOpenSponsorDetail(goldSurfShop);
+                  }
+                }}
+                className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-amber-400/50 cursor-pointer group shadow-sm"
+                title="Click to view surf shop details"
+              >
+                <img
+                  src={goldSurfShop.image}
+                  alt={goldSurfShop.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                  <span className="text-[9px] font-black uppercase text-amber-300 bg-slate-950/80 px-1 py-0.5 rounded shadow opacity-90">
+                    View
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>Official Gold Surf Shop Sponsor</span>
+                  {goldSurfShop.dist !== undefined && (
+                    <span className="text-[11px] text-amber-400/90 font-semibold">• {goldSurfShop.dist} km away</span>
+                  )}
+                </div>
+                <h4
+                  onClick={() => {
+                    if (onOpenSponsorDetail) {
+                      onClose();
+                      onOpenSponsorDetail(goldSurfShop);
+                    }
+                  }}
+                  className="text-sm font-extrabold text-white hover:text-amber-300 transition-colors cursor-pointer mt-0.5"
+                >
+                  {goldSurfShop.name} <span className="text-xs text-amber-400 font-normal">↗</span>
+                </h4>
+                <p className="text-xs text-amber-200/90 line-clamp-1">{goldSurfShop.description}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+              {goldSurfShop.discountCode && (
+                <span className="text-[11px] font-mono px-2 py-1 rounded-lg bg-amber-400/20 text-amber-300 border border-amber-400/40 font-bold">
+                  {goldSurfShop.discountCode} (-{goldSurfShop.discountPercentage}%)
+                </span>
+              )}
+              <button
+                onClick={() => {
+                  onClose();
+                  onBookVenue(goldSurfShop);
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition-colors flex items-center gap-1 cursor-pointer shadow-sm"
+              >
+                Book Gear / Lesson ↗
               </button>
             </div>
           </div>

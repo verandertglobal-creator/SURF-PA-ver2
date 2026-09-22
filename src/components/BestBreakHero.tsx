@@ -8,10 +8,12 @@ interface BestBreakHeroProps {
   condition: MarineCondition | null;
   discipline: SportDiscipline;
   goldSponsor?: Venue;
+  goldSurfShop?: Venue;
   onOpenSpot: (spot: SurfSpot) => void;
   onBookVenue: (venue: Venue) => void;
   onOpenReportModal: (spotId: string) => void;
   onOpenSponsorDetail?: (venue: Venue) => void;
+  onNavigateToSurfShops?: () => void;
 }
 
 export const BestBreakHero: React.FC<BestBreakHeroProps> = ({
@@ -19,10 +21,12 @@ export const BestBreakHero: React.FC<BestBreakHeroProps> = ({
   condition,
   discipline,
   goldSponsor,
+  goldSurfShop,
   onOpenSpot,
   onBookVenue,
   onOpenReportModal,
-  onOpenSponsorDetail
+  onOpenSponsorDetail,
+  onNavigateToSurfShops
 }) => {
   if (!spot || !condition) {
     return (
@@ -100,6 +104,73 @@ export const BestBreakHero: React.FC<BestBreakHeroProps> = ({
             >
               <Calendar className="w-3.5 h-3.5" /> Book Now
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Closest Gold Surf Shop Billboard in Main Layout */}
+      {goldSurfShop && (!goldSponsor || goldSponsor.id !== goldSurfShop.id) && (
+        <div className="mb-4 -mx-1 -mt-1 p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-yellow-500/10 to-transparent border border-amber-400/35 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md shadow-amber-950/20">
+          <div className="flex items-center gap-3">
+            <div
+              onClick={() => onOpenSponsorDetail && onOpenSponsorDetail(goldSurfShop)}
+              className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-amber-400/50 cursor-pointer group shadow-sm"
+              title="Click to view surf shop details & photo"
+            >
+              <img
+                src={goldSurfShop.image}
+                alt={goldSurfShop.name}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                <span className="text-[9px] font-black uppercase text-amber-300 bg-slate-950/80 px-1 py-0.5 rounded shadow opacity-90 group-hover:scale-105 transition-transform">
+                  View
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 flex items-center gap-1 shadow-sm">
+                  <Sparkles className="w-3 h-3" /> Gold Surf Shop Sponsor
+                </span>
+                <span className="text-[10px] text-amber-300 font-bold">
+                  • {goldSurfShop.dist !== undefined ? `${goldSurfShop.dist} km away` : 'Nearest Gold Surf Shop'}
+                </span>
+              </div>
+              <div
+                onClick={() => onOpenSponsorDetail && onOpenSponsorDetail(goldSurfShop)}
+                className="text-sm font-extrabold text-white hover:text-amber-300 transition-colors cursor-pointer mt-0.5 flex items-center gap-1.5"
+              >
+                <span>{goldSurfShop.name}</span>
+                <span className="text-xs text-amber-400 font-semibold underline decoration-amber-400/50">Details ↗</span>
+              </div>
+              <p className="text-xs text-slate-300 line-clamp-1">
+                {goldSurfShop.sponsorTagline || goldSurfShop.description}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+            {goldSurfShop.discountCode && (
+              <span className="text-[11px] font-mono px-2 py-1 rounded-lg bg-amber-400/20 text-amber-300 border border-amber-400/30 font-bold">
+                {goldSurfShop.discountCode} (-{goldSurfShop.discountPercentage}%)
+              </span>
+            )}
+            <button
+              onClick={() => onBookVenue(goldSurfShop)}
+              className="text-xs font-black px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm"
+            >
+              Book Gear / Lesson ↗
+            </button>
+            {onNavigateToSurfShops && (
+              <button
+                onClick={onNavigateToSurfShops}
+                className="text-xs font-bold px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors cursor-pointer"
+              >
+                All Shops ↗
+              </button>
+            )}
           </div>
         </div>
       )}

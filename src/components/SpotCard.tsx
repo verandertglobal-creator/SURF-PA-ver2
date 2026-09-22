@@ -8,6 +8,7 @@ interface SpotCardProps {
   condition: MarineCondition;
   discipline: SportDiscipline;
   goldSponsor?: Venue;
+  goldShop?: Venue;
   onSelect: (spot: SurfSpot) => void;
   onBookVenue?: (venue: Venue) => void;
   onOpenSponsorDetail?: (venue: Venue) => void;
@@ -18,6 +19,7 @@ export const SpotCard: React.FC<SpotCardProps> = ({
   condition,
   discipline,
   goldSponsor,
+  goldShop,
   onSelect,
   onBookVenue,
   onOpenSponsorDetail
@@ -85,6 +87,48 @@ export const SpotCard: React.FC<SpotCardProps> = ({
                 className="text-[10px] uppercase font-bold text-amber-400 hover:text-amber-300 px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30 cursor-pointer"
               >
                 Book ↗
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Attached Gold Surf Shop Bar (if distinct from goldSponsor) */}
+      {goldShop && (!goldSponsor || goldSponsor.id !== goldShop.id) && (
+        <div
+          onClick={(e) => {
+            if (onOpenSponsorDetail) {
+              e.stopPropagation();
+              onOpenSponsorDetail(goldShop);
+            }
+          }}
+          className="mb-2.5 -mx-1 -mt-1 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500/15 to-transparent border border-amber-400/25 flex items-center justify-between text-[11px] hover:border-amber-400/50 transition-colors"
+          title="Click to view Gold Surf Shop details & gear discounts"
+        >
+          <div className="flex items-center gap-1.5 text-amber-300 font-bold truncate">
+            {goldShop.image && (
+              <img
+                src={goldShop.image}
+                alt={goldShop.name}
+                className="w-5 h-5 rounded-full object-cover shrink-0 border border-amber-400/40"
+              />
+            )}
+            <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+            <span className="truncate max-w-[140px] sm:max-w-none">🏄 {goldShop.name}</span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[10px] text-amber-300/80 hover:text-amber-200 font-semibold underline">
+              Details
+            </span>
+            {onBookVenue && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onBookVenue(goldShop);
+                }}
+                className="text-[10px] uppercase font-bold text-amber-400 hover:text-amber-300 px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30 cursor-pointer"
+              >
+                Gear ↗
               </button>
             )}
           </div>

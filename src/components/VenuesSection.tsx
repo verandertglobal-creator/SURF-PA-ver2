@@ -15,6 +15,8 @@ export const VenuesSection: React.FC<VenuesSectionProps> = ({
   venues,
   onBookVenue,
   onOpenSponsorPortal,
+  userLat,
+  userLng,
   onOpenSponsorDetail
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<'all' | VenueCategory>('all');
@@ -30,11 +32,17 @@ export const VenuesSection: React.FC<VenuesSectionProps> = ({
     return matchesCategory && matchesQuery;
   });
 
-  // Sort venues by sponsor priority: Gold -> Silver -> Bronze -> standard, then by rating
+  // Sort venues by sponsor priority: Gold -> Silver -> Bronze -> standard, then by closest GPS distance, then rating
   const sortedVenues = [...filteredVenues].sort((a, b) => {
     const tierWeight = (tier?: string) => (tier === 'gold' ? 3 : tier === 'silver' ? 2 : tier === 'bronze' ? 1 : 0);
     const weightDiff = tierWeight(b.sponsorTier) - tierWeight(a.sponsorTier);
     if (weightDiff !== 0) return weightDiff;
+    
+    // Sort by closest GPS distance first
+    const distA = a.dist ?? 9999;
+    const distB = b.dist ?? 9999;
+    if (distA !== distB) return distA - distB;
+
     return b.rating - a.rating;
   });
 

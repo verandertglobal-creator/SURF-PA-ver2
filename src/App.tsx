@@ -26,24 +26,26 @@ import { SpotCard } from './components/SpotCard';
 import { SpotDetailModal } from './components/SpotDetailModal';
 import { InteractiveMap } from './components/InteractiveMap';
 import { VenuesSection } from './components/VenuesSection';
+import { SurfShopsSection } from './components/SurfShopsSection';
 import { SponsorPortalModal } from './components/SponsorPortalModal';
 import { SponsorDetailModal } from './components/SponsorDetailModal';
 import { BookingModal } from './components/BookingModal';
 import { MyBookingsModal } from './components/MyBookingsModal';
 import { SwellAlertsModal } from './components/SwellAlertsModal';
 import { CommunityForum } from './components/CommunityForum';
-import { Search, SlidersHorizontal, MapPin, Waves, AlertCircle, X, Sparkles, Bell } from 'lucide-react';
+import { Search, SlidersHorizontal, MapPin, Waves, AlertCircle, X, Sparkles, Bell, ShoppingBag } from 'lucide-react';
+import { safeStorage } from './utils/storage';
 
 export default function App() {
   // Origin GPS state
   const [origin, setOrigin] = useState(() => {
-    const saved = localStorage.getItem('surf_sa_origin');
-    if (saved) {
-      try {
+    try {
+      const saved = safeStorage.getItem('surf_sa_origin');
+      if (saved) {
         return JSON.parse(saved);
-      } catch {
-        // fallback
       }
+    } catch {
+      // fallback
     }
     return DEFAULT_SOUTH_AFRICA_ORIGIN;
   });
@@ -53,7 +55,7 @@ export default function App() {
 
   // App discipline & tab
   const [discipline, setDiscipline] = useState<SportDiscipline>('surf');
-  const [activeTab, setActiveTab] = useState<'spots' | 'venues' | 'map' | 'community'>('spots');
+  const [activeTab, setActiveTab] = useState<'spots' | 'venues' | 'surf-shops' | 'map' | 'community'>('spots');
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,42 +76,42 @@ export default function App() {
 
   // Persistent user state
   const [venues, setVenues] = useState<Venue[]>(() => {
-    const saved = localStorage.getItem('surf_sa_venues');
-    if (saved) {
-      try {
+    try {
+      const saved = safeStorage.getItem('surf_sa_venues');
+      if (saved) {
         return JSON.parse(saved);
-      } catch {}
-    }
+      }
+    } catch {}
     return CURATED_VENUES;
   });
 
   const [bookings, setBookings] = useState<BookingReservation[]>(() => {
-    const saved = localStorage.getItem('surf_sa_bookings');
-    if (saved) {
-      try {
+    try {
+      const saved = safeStorage.getItem('surf_sa_bookings');
+      if (saved) {
         return JSON.parse(saved);
-      } catch {}
-    }
+      }
+    } catch {}
     return [];
   });
 
   const [waveReports, setWaveReports] = useState<WaveReport[]>(() => {
-    const saved = localStorage.getItem('surf_sa_reports');
-    if (saved) {
-      try {
+    try {
+      const saved = safeStorage.getItem('surf_sa_reports');
+      if (saved) {
         return JSON.parse(saved);
-      } catch {}
-    }
+      }
+    } catch {}
     return INITIAL_WAVE_REPORTS;
   });
 
   const [alertConfig, setAlertConfig] = useState<SwellAlertConfig>(() => {
-    const saved = localStorage.getItem('surf_sa_alert_config');
-    if (saved) {
-      try {
+    try {
+      const saved = safeStorage.getItem('surf_sa_alert_config');
+      if (saved) {
         return JSON.parse(saved);
-      } catch {}
-    }
+      }
+    } catch {}
     return DEFAULT_ALERT_CONFIG;
   });
 
@@ -120,23 +122,23 @@ export default function App() {
 
   // Sync state to LocalStorage
   useEffect(() => {
-    localStorage.setItem('surf_sa_origin', JSON.stringify(origin));
+    safeStorage.setItem('surf_sa_origin', JSON.stringify(origin));
   }, [origin]);
 
   useEffect(() => {
-    localStorage.setItem('surf_sa_venues', JSON.stringify(venues));
+    safeStorage.setItem('surf_sa_venues', JSON.stringify(venues));
   }, [venues]);
 
   useEffect(() => {
-    localStorage.setItem('surf_sa_bookings', JSON.stringify(bookings));
+    safeStorage.setItem('surf_sa_bookings', JSON.stringify(bookings));
   }, [bookings]);
 
   useEffect(() => {
-    localStorage.setItem('surf_sa_reports', JSON.stringify(waveReports));
+    safeStorage.setItem('surf_sa_reports', JSON.stringify(waveReports));
   }, [waveReports]);
 
   useEffect(() => {
-    localStorage.setItem('surf_sa_alert_config', JSON.stringify(alertConfig));
+    safeStorage.setItem('surf_sa_alert_config', JSON.stringify(alertConfig));
   }, [alertConfig]);
 
   // Request high-accuracy GPS
@@ -281,18 +283,58 @@ export default function App() {
       });
   }, [spotsWithData, searchQuery, searchRadiusKm, selectedDifficulty]);
 
-  // Gold sponsor mapping for spots
+  // Venues with calculated GPS distance from user's current origin
+  const venuesWithDistance = useMemo(() => {
+    return venues.map((venue) => ({
+      ...venue,
+      dist: calculateDistanceKm(origin.lat, origin.lng, venue.lat, venue.lng)
+    }));
+  }, [venues, origin.lat, origin.lng]);
+
+  // Nearest Gold Surf Shop according to GPS (Gold tier first, closest distance first)
+  const closestGoldSurfShop = useMemo(() => {
+    const goldShops = venuesWithDistance.filter(
+      (v) => v.category === 'shop' && v.sponsorTier === 'gold'
+    );
+    return [...goldShops].sort((a, b) => (a.dist ?? 9999) - (b.dist ?? 9999))[0] || null;
+  }, [venuesWithDistance]);
+
+  // Nearest Gold Stay / Lodge according to GPS
+  const closestGoldStay = useMemo(() => {
+    const goldStays = venuesWithDistance.filter(
+      (v) => v.category === 'stay' && v.sponsorTier === 'gold'
+    );
+    return [...goldStays].sort((a, b) => (a.dist ?? 9999) - (b.dist ?? 9999))[0] || null;
+  }, [venuesWithDistance]);
+
+  // Gold sponsor mapping for spots (stay or break sponsor)
   const getGoldSponsorForSpot = useCallback(
     (spotId: string) => {
       const spot = SURF_SPOTS.find((s) => s.id === spotId);
       if (!spot) return undefined;
-      return venues.find(
+      return venuesWithDistance.find(
         (v) =>
           v.sponsorTier === 'gold' &&
           (v.town.toLowerCase() === spot.town.toLowerCase() || v.region === spot.region)
       );
     },
-    [venues]
+    [venuesWithDistance]
+  );
+
+  // Gold surf shop sponsor mapping for spots (local break gold surf shop or closest gold surf shop)
+  const getGoldShopForSpot = useCallback(
+    (spotId: string) => {
+      const spot = SURF_SPOTS.find((s) => s.id === spotId);
+      if (!spot) return closestGoldSurfShop;
+      const localShop = venuesWithDistance.find(
+        (v) =>
+          v.category === 'shop' &&
+          v.sponsorTier === 'gold' &&
+          (v.town.toLowerCase() === spot.town.toLowerCase() || v.region === spot.region)
+      );
+      return localShop || closestGoldSurfShop;
+    },
+    [venuesWithDistance, closestGoldSurfShop]
   );
 
   // Trigger test swell push notification
@@ -476,6 +518,7 @@ export default function App() {
               condition={bestBreak ? conditions[bestBreak.id] || null : null}
               discipline={discipline}
               goldSponsor={bestBreak ? getGoldSponsorForSpot(bestBreak.id) : undefined}
+              goldSurfShop={bestBreak ? getGoldShopForSpot(bestBreak.id) : closestGoldSurfShop}
               onOpenSpot={(s) => setSelectedSpotForDetail(s)}
               onBookVenue={(v) => setSelectedVenueForBooking(v)}
               onOpenReportModal={(spotId) => {
@@ -483,7 +526,106 @@ export default function App() {
                 setActiveTab('community');
               }}
               onOpenSponsorDetail={(v) => setSelectedVenueForDetail(v)}
+              onNavigateToSurfShops={() => setActiveTab('surf-shops')}
             />
+
+            {/* Featured Gold Sponsors in Main Layout: Stay/Lodge & Closest Surf Shop */}
+            {(closestGoldStay || closestGoldSurfShop) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                {closestGoldStay && (
+                  <div className="rounded-2xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border border-amber-400/40 p-3.5 flex items-center justify-between gap-3 shadow-md shadow-amber-950/10">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div
+                        onClick={() => setSelectedVenueForDetail(closestGoldStay)}
+                        className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-amber-400/50 cursor-pointer group shadow-sm"
+                        title="View lodge photo & details"
+                      >
+                        <img
+                          src={closestGoldStay.image}
+                          alt={closestGoldStay.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/0 transition-colors" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 text-[10px] font-black uppercase text-amber-400">
+                          <Sparkles className="w-3 h-3" />
+                          <span>Featured Gold Stay</span>
+                          <span className="text-slate-400 font-semibold">• {closestGoldStay.dist ?? 0} km</span>
+                        </div>
+                        <h4
+                          onClick={() => setSelectedVenueForDetail(closestGoldStay)}
+                          className="text-xs sm:text-sm font-extrabold text-white truncate hover:text-amber-300 transition-colors cursor-pointer mt-0.5"
+                        >
+                          {closestGoldStay.name}
+                        </h4>
+                        <p className="text-[11px] text-slate-400 truncate">
+                          {closestGoldStay.town} • {closestGoldStay.discountCode ? `Code ${closestGoldStay.discountCode} (-${closestGoldStay.discountPercentage}%)` : 'Oceanfront View'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        onClick={() => setSelectedVenueForBooking(closestGoldStay)}
+                        className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition-colors cursor-pointer shadow-sm"
+                      >
+                        Book Room ↗
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {closestGoldSurfShop && (
+                  <div className="rounded-2xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border border-amber-400/40 p-3.5 flex items-center justify-between gap-3 shadow-md shadow-amber-950/10">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div
+                        onClick={() => setSelectedVenueForDetail(closestGoldSurfShop)}
+                        className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-amber-400/50 cursor-pointer group shadow-sm"
+                        title="View surf shop photo & details"
+                      >
+                        <img
+                          src={closestGoldSurfShop.image}
+                          alt={closestGoldSurfShop.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/0 transition-colors" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 text-[10px] font-black uppercase text-amber-400">
+                          <Sparkles className="w-3 h-3" />
+                          <span>Closest Gold Surf Shop</span>
+                          <span className="text-teal-300 font-semibold">• {closestGoldSurfShop.dist ?? 0} km away</span>
+                        </div>
+                        <h4
+                          onClick={() => setSelectedVenueForDetail(closestGoldSurfShop)}
+                          className="text-xs sm:text-sm font-extrabold text-white truncate hover:text-amber-300 transition-colors cursor-pointer mt-0.5"
+                        >
+                          {closestGoldSurfShop.name}
+                        </h4>
+                        <p className="text-[11px] text-slate-400 truncate">
+                          {closestGoldSurfShop.town} • {closestGoldSurfShop.discountCode ? `Code ${closestGoldSurfShop.discountCode} (-${closestGoldSurfShop.discountPercentage}%)` : 'Board Hire & Ding Repairs'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        onClick={() => setSelectedVenueForBooking(closestGoldSurfShop)}
+                        className="px-2.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition-colors cursor-pointer shadow-sm"
+                      >
+                        Book Gear ↗
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('surf-shops')}
+                        className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs transition-colors cursor-pointer"
+                        title="View full closest surf shop directory"
+                      >
+                        All Shops
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Filter Dock */}
             <div className="rounded-2xl bg-slate-900 border border-slate-800 p-3.5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
@@ -573,6 +715,7 @@ export default function App() {
                       }
                       discipline={discipline}
                       goldSponsor={getGoldSponsorForSpot(spot.id)}
+                      goldShop={getGoldShopForSpot(spot.id)}
                       onSelect={(s) => setSelectedSpotForDetail(s)}
                       onBookVenue={(v) => setSelectedVenueForBooking(v)}
                       onOpenSponsorDetail={(v) => setSelectedVenueForDetail(v)}
@@ -584,10 +727,10 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 2: Stays, Eats & Surf Shops */}
+        {/* TAB 2: Stays, Eats & Lodges */}
         {activeTab === 'venues' && (
           <VenuesSection
-            venues={venues}
+            venues={venuesWithDistance}
             onBookVenue={(v) => setSelectedVenueForBooking(v)}
             onOpenSponsorPortal={() => setIsSponsorPortalOpen(true)}
             onOpenSponsorDetail={(v) => setSelectedVenueForDetail(v)}
@@ -596,11 +739,24 @@ export default function App() {
           />
         )}
 
-        {/* TAB 3: Interactive Coastal Radar Map */}
+        {/* TAB 3: Closest Surf Shops (GPS Proximity & Gold Tier Sponsorship) */}
+        {activeTab === 'surf-shops' && (
+          <SurfShopsSection
+            shops={venuesWithDistance.filter((v) => v.category === 'shop')}
+            userLat={origin.lat}
+            userLng={origin.lng}
+            userLabel={origin.label}
+            onBookVenue={(v) => setSelectedVenueForBooking(v)}
+            onOpenSponsorDetail={(v) => setSelectedVenueForDetail(v)}
+            onOpenSponsorPortal={() => setIsSponsorPortalOpen(true)}
+          />
+        )}
+
+        {/* TAB 4: Interactive Coastal Radar Map */}
         {activeTab === 'map' && (
           <InteractiveMap
             spots={spotsWithData}
-            venues={venues}
+            venues={venuesWithDistance}
             userLat={origin.lat}
             userLng={origin.lng}
             userLabel={origin.label}
@@ -609,7 +765,7 @@ export default function App() {
           />
         )}
 
-        {/* TAB 4: Community Forum & Live Wave Reports */}
+        {/* TAB 5: Community Forum & Live Wave Reports */}
         {activeTab === 'community' && (
           <CommunityForum
             reports={waveReports}
@@ -641,7 +797,8 @@ export default function App() {
           }
           discipline={discipline}
           goldSponsor={getGoldSponsorForSpot(selectedSpotForDetail.id)}
-          nearbyVenues={venues.filter(
+          goldSurfShop={getGoldShopForSpot(selectedSpotForDetail.id)}
+          nearbyVenues={venuesWithDistance.filter(
             (v) =>
               v.town.toLowerCase() === selectedSpotForDetail.town.toLowerCase() ||
               v.region === selectedSpotForDetail.region

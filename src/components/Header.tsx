@@ -14,8 +14,8 @@ interface HeaderProps {
   onOpenSponsors: () => void;
   onOpenBookings: () => void;
   activeBookingsCount: number;
-  activeTab: 'spots' | 'venues' | 'map' | 'community';
-  setActiveTab: (t: 'spots' | 'venues' | 'map' | 'community') => void;
+  activeTab: 'spots' | 'venues' | 'surf-shops' | 'map' | 'community';
+  setActiveTab: (t: 'spots' | 'venues' | 'surf-shops' | 'map' | 'community') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -227,13 +227,27 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('venues')}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
                 activeTab === 'venues'
                   ? 'bg-slate-800 text-teal-400 border border-teal-500/30'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
               <span>🏨 Stay, Eat & Shops</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('surf-shops')}
+              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                activeTab === 'surf-shops'
+                  ? 'bg-slate-800 text-amber-300 border border-amber-400/40 font-bold shadow-sm shadow-amber-950/20'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title="Find closest surf shops, board rentals & ding repairs by GPS"
+            >
+              <span>🏄 Closest Surf Shops</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-400/20 text-amber-300 font-extrabold border border-amber-400/30">
+                GPS
+              </span>
             </button>
             <button
               onClick={() => setActiveTab('map')}

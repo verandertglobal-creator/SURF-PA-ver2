@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { safeStorage } from '../utils/storage';
 
 export type AppTheme = 'deep-ocean' | 'sun-bleached';
 
@@ -16,7 +17,7 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<AppTheme>(() => {
-    const saved = localStorage.getItem('surf_sa_theme');
+    const saved = safeStorage.getItem('surf_sa_theme');
     if (saved === 'sun-bleached' || saved === 'deep-ocean') {
       return saved;
     }
@@ -25,7 +26,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const setTheme = (newTheme: AppTheme) => {
     setThemeState(newTheme);
-    localStorage.setItem('surf_sa_theme', newTheme);
+    safeStorage.setItem('surf_sa_theme', newTheme);
   };
 
   const toggleTheme = () => {
