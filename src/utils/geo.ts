@@ -41,6 +41,55 @@ export function formatWaveHeight(meters: number): { meters: string; feet: string
   };
 }
 
+export interface WaveHeightDetails {
+  backMeters: string;
+  backFeet: string;
+  faceMeters: string;
+  faceFeet: string;
+  bodyScale: string;
+  shoalingFactor: number;
+}
+
+/**
+ * Calculates breaking wave face height from deepwater swell height (back of wave)
+ * based on period shoaling physics.
+ * Traditional South African / Hawaiian scale measures the BACK of the wave (~50-65% of face).
+ */
+export function getWaveHeightDetails(swellMeters: number, period: number = 10): WaveHeightDetails {
+  const backM = Math.max(0.1, swellMeters);
+  const backFt = backM * 3.28084;
+
+  // Shoaling physics: longer period swells refract and stand up significantly taller on shallow banks/reefs
+  let shoalingFactor = 1.25;
+  if (period >= 15) shoalingFactor = 1.65;
+  else if (period >= 13) shoalingFactor = 1.5;
+  else if (period >= 11) shoalingFactor = 1.35;
+  else if (period >= 9) shoalingFactor = 1.2;
+  else shoalingFactor = 1.1; // Short windchop swells barely stand up
+
+  const faceM = backM * shoalingFactor;
+  const faceFt = faceM * 3.28084;
+
+  let bodyScale = 'Waist to Chest';
+  if (faceM < 0.6) bodyScale = 'Ankle to Knee';
+  else if (faceM < 0.9) bodyScale = 'Knee to Waist';
+  else if (faceM < 1.3) bodyScale = 'Waist to Chest';
+  else if (faceM < 1.7) bodyScale = 'Chest to Head high';
+  else if (faceM < 2.2) bodyScale = 'Head high to Overhead';
+  else if (faceM < 2.8) bodyScale = 'Overhead (1–2ft overhead)';
+  else if (faceM < 3.6) bodyScale = 'Double Overhead';
+  else bodyScale = 'Triple Overhead+';
+
+  return {
+    backMeters: `${backM.toFixed(1)}m`,
+    backFeet: `${backFt.toFixed(1)}ft`,
+    faceMeters: `${faceM.toFixed(1)}m`,
+    faceFeet: `${faceFt.toFixed(1)}ft`,
+    bodyScale,
+    shoalingFactor
+  };
+}
+
 export function degreesToCompass(deg: number): string {
   const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
   const index = Math.round((deg % 360) / 22.5) % 16;
@@ -150,7 +199,7 @@ const forecastCache: Record<string, { timestamp: number; data: MarineCondition }
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 mins
 
 export async function fetchSpotMarineCondition(spot: SurfSpot): Promise<MarineCondition> {
-  const cacheKey = `${spot.lat.toFixed(3)},${spot.lng.toFixed(3)}`;
+  const cacheKey = `${spot.id}-${spot.lat.toFixed(3)},${spot.lng.toFixed(3)}`;
   const now = Date.now();
 
   if (forecastCache[cacheKey] && now - forecastCache[cacheKey].timestamp < CACHE_TTL_MS) {
@@ -163,12 +212,13 @@ export async function fetchSpotMarineCondition(spot: SurfSpot): Promise<MarineCo
   const offshoreAngle = spot.offshoreWindDir ?? ((spot.coastFacing != null ? spot.coastFacing + 180 : 70) % 360);
   const fallbackWindDir = isWestCoast ? 70 : isKzn ? 275 : 290;
   const fallbackWindSpeed = 12;
+  const spotExposure = spot.swellExposure ?? 0.85;
 
   const regionalDefault: MarineCondition = {
-    swellHeight: isWestCoast ? 1.6 : isKzn ? 1.4 : 1.8,
+    swellHeight: Number(((isWestCoast ? 1.6 : isKzn ? 1.4 : 1.8) * spotExposure).toFixed(1)),
     swellPeriod: 11,
     swellDir: isWestCoast ? 225 : isKzn ? 165 : 210,
-    waveHeight: isWestCoast ? 1.7 : 1.5,
+    waveHeight: Number(((isWestCoast ? 1.7 : 1.5) * spotExposure).toFixed(1)),
     windWaveHeight: 0.3,
     windSpeed: fallbackWindSpeed,
     windDir: fallbackWindDir,
@@ -217,8 +267,11 @@ export async function fetchSpotMarineCondition(spot: SurfSpot): Promise<MarineCo
     const currentWindSpeed = Math.round(weatherData.current?.wind_speed_10m ?? regionalDefault.windSpeed);
     const currentWindDir = Math.round(weatherData.current?.wind_direction_10m ?? regionalDefault.windDir);
     const currentWindGusts = Math.round(weatherData.current?.wind_gusts_10m ?? currentWindSpeed);
-    const currentSwellHeight = Number((marineData.current?.swell_wave_height ?? regionalDefault.swellHeight).toFixed(1));
-    const currentWaveHeight = Number((marineData.current?.wave_height ?? currentSwellHeight).toFixed(1));
+    // Apply spot-specific swell exposure (sheltering and headland shadow attenuation)
+    const rawSwellHeight = Number((marineData.current?.swell_wave_height ?? regionalDefault.swellHeight).toFixed(2));
+    const currentSwellHeight = Number(Math.max(0.2, rawSwellHeight * spotExposure).toFixed(1));
+    const rawWaveHeight = Number((marineData.current?.wave_height ?? rawSwellHeight).toFixed(2));
+    const currentWaveHeight = Number(Math.max(0.2, rawWaveHeight * spotExposure).toFixed(1));
     const currentSwellPeriod = Math.round(marineData.current?.swell_wave_period ?? regionalDefault.swellPeriod);
     const currentSwellDir = Math.round(marineData.current?.swell_wave_direction ?? regionalDefault.swellDir);
     const currentWindWaveHeight = Number((marineData.current?.wind_wave_height ?? 0.2).toFixed(1));
@@ -240,8 +293,12 @@ export async function fetchSpotMarineCondition(spot: SurfSpot): Promise<MarineCo
       const hourVal = hourDate.getHours();
       const hourLabel = `${hourVal < 10 ? '0' : ''}${hourVal}:00`;
 
-      const hWaveHeight = Number((marineData.hourly?.wave_height?.[i] ?? currentWaveHeight).toFixed(1));
-      const hSwellHeight = Number((marineData.hourly?.swell_wave_height?.[i] ?? currentSwellHeight).toFixed(1));
+      const rawHWave = Number((marineData.hourly?.wave_height?.[i] ?? rawWaveHeight).toFixed(2));
+      const hWaveHeight = Number(Math.max(0.2, rawHWave * spotExposure).toFixed(1));
+
+      const rawHSwell = Number((marineData.hourly?.swell_wave_height?.[i] ?? rawSwellHeight).toFixed(2));
+      const hSwellHeight = Number(Math.max(0.2, rawHSwell * spotExposure).toFixed(1));
+
       const hPeriod = Math.round(marineData.hourly?.swell_wave_period?.[i] ?? currentSwellPeriod);
       const hWindSpeed = Math.round(weatherData.hourly?.wind_speed_10m?.[i] ?? currentWindSpeed);
       const hWindDir = Math.round(weatherData.hourly?.wind_direction_10m?.[i] ?? currentWindDir);

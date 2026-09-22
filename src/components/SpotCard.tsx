@@ -1,6 +1,6 @@
 import React from 'react';
 import { SurfSpot, MarineCondition, SportDiscipline, Venue } from '../types';
-import { getScoreLabel, degreesToCompass, formatWaveHeight } from '../utils/geo';
+import { getScoreLabel, degreesToCompass, getWaveHeightDetails } from '../utils/geo';
 import { Waves, Wind, Compass, Sparkles, Navigation, ChevronRight, ShieldAlert } from 'lucide-react';
 
 interface SpotCardProps {
@@ -193,21 +193,27 @@ export const SpotCard: React.FC<SpotCardProps> = ({
       </div>
 
       {/* Live Marine Conditions Row */}
-      <div className="mt-3.5 pt-3 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-xs">
-        <div className="bg-slate-950/40 p-2 rounded-lg border border-slate-800/60">
-          <div className="text-[10px] text-slate-500 font-semibold flex items-center gap-1">
-            <Waves className="w-3 h-3 text-teal-400" /> Swell
-          </div>
-          <div className="font-bold text-slate-200 mt-0.5 leading-tight">
-            {formatWaveHeight(condition.swellHeight).meters} <span className="text-[11px] text-teal-400 font-extrabold">({formatWaveHeight(condition.swellHeight).feet})</span>
-          </div>
-          <div className="text-[10px] text-slate-400 flex items-center justify-between">
-            <span>{condition.swellPeriod}s</span>
-            <span>{swellCompass}</span>
-          </div>
-        </div>
+      {(() => {
+        const wave = getWaveHeightDetails(condition.swellHeight, condition.swellPeriod);
+        return (
+          <div className="mt-3.5 pt-3 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-xs">
+            <div className="bg-slate-950/40 p-2 rounded-lg border border-slate-800/60">
+              <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-between">
+                <span className="flex items-center gap-1"><Waves className="w-3 h-3 text-teal-400" /> Swell</span>
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold bg-slate-800/80 px-1 py-0.2 rounded" title="Traditional SA / Hawaiian scale: back of the wave">Back</span>
+              </div>
+              <div className="font-bold text-slate-200 mt-0.5 leading-tight">
+                {wave.backMeters} <span className="text-[11px] text-teal-400 font-extrabold">({wave.backFeet})</span>
+              </div>
+              <div className="text-[10px] text-slate-400 flex items-center justify-between mt-0.5">
+                <span>{condition.swellPeriod}s</span>
+                <span className="text-[9px] text-teal-300/90 font-medium truncate max-w-[65px]" title={`Breaking face: ${wave.faceFeet} (${wave.bodyScale})`}>
+                  ~{wave.faceFeet} Face
+                </span>
+              </div>
+            </div>
 
-        <div className="bg-slate-950/40 p-2 rounded-lg border border-slate-800/60">
+            <div className="bg-slate-950/40 p-2 rounded-lg border border-slate-800/60">
           <div className="text-[10px] text-slate-500 font-semibold flex items-center gap-1">
             <Wind className="w-3 h-3 text-sky-400" /> Wind
           </div>
@@ -248,6 +254,8 @@ export const SpotCard: React.FC<SpotCardProps> = ({
           <div className="text-[10px] text-indigo-300 font-medium truncate">{condition.tideTrend}</div>
         </div>
       </div>
+    );
+  })()}
 
       {/* Card Footer */}
       <div className="mt-3 flex items-center justify-between text-xs text-slate-400 pt-1">

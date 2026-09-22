@@ -12,6 +12,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 250,
     offshoreWindDir: 70,
     minPeriod: 11,
+    swellExposure: 0.45, // Tucked deeply behind Yzerfontein Point & Dassen Island on SW swell
     
     type: 'Beachbreak',
     difficulty: 'Beginner–Intermediate',
@@ -34,6 +35,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 245,
     offshoreWindDir: 65,
     minPeriod: 11,
+    swellExposure: 0.70, // Sits further out on the point reef shelf
     
     type: 'Slab wedge',
     difficulty: 'Advanced',
@@ -56,6 +58,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 320,
     offshoreWindDir: 140,
     minPeriod: 12,
+    swellExposure: 0.65, // Wraps into bay behind Baboon Point
     
     type: 'Point break',
     difficulty: 'Advanced',
@@ -102,6 +105,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 260,
     offshoreWindDir: 80,
     minPeriod: 11,
+    swellExposure: 0.80,
     
     type: 'Beachbreak',
     difficulty: 'Beginner–Intermediate',
@@ -124,6 +128,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 260,
     offshoreWindDir: 80,
     minPeriod: 11,
+    swellExposure: 0.82,
     
     type: 'Beachbreak',
     difficulty: 'Intermediate',
@@ -146,6 +151,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 260,
     offshoreWindDir: 80,
     minPeriod: 11,
+    swellExposure: 0.75,
     
     type: 'Beachbreak',
     difficulty: 'Beginner–Intermediate',
@@ -170,6 +176,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 250,
     offshoreWindDir: 70,
     minPeriod: 12,
+    swellExposure: 0.95,
     
     type: 'Beachbreak',
     difficulty: 'Advanced',
@@ -192,6 +199,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 220,
     offshoreWindDir: 40,
     minPeriod: 15,
+    swellExposure: 1.25,
     
     type: 'Big-wave reef',
     difficulty: 'Expert',
@@ -214,6 +222,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 250,
     offshoreWindDir: 70,
     minPeriod: 12,
+    swellExposure: 0.90,
     
     type: 'Beachbreak',
     difficulty: 'Intermediate',
@@ -236,6 +245,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 240,
     offshoreWindDir: 60,
     minPeriod: 13,
+    swellExposure: 1.0,
     
     type: 'Reef',
     difficulty: 'Advanced',
@@ -258,6 +268,7 @@ export const SURF_SPOTS: SurfSpot[] = [
     coastFacing: 160,
     offshoreWindDir: 340,
     minPeriod: 9,
+    swellExposure: 0.42, // Sheltered inside False Bay behind Cape Point
     
     type: 'Beachbreak',
     difficulty: 'Beginner',

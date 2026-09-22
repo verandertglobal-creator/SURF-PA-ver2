@@ -1,6 +1,6 @@
 import React from 'react';
 import { SurfSpot, MarineCondition, SportDiscipline, Venue } from '../types';
-import { getScoreLabel, degreesToCompass, formatWaveHeight } from '../utils/geo';
+import { getScoreLabel, degreesToCompass, getWaveHeightDetails } from '../utils/geo';
 import { HourlyForecastChart } from './HourlyForecastChart';
 import { X, Navigation, Waves, Wind, Compass, ShieldAlert, Sparkles, Calendar, MessageSquare, Bell, ArrowUpRight, Info } from 'lucide-react';
 
@@ -225,67 +225,92 @@ export const SpotDetailModal: React.FC<SpotDetailModalProps> = ({
         )}
 
         {/* Live Marine Grid */}
-        <div className="my-4 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
-            <div className="text-[11px] text-slate-400 font-semibold flex items-center justify-between">
-              <span>Current Swell</span>
-              <Waves className="w-3.5 h-3.5 text-teal-400" />
-            </div>
-            <div className="text-lg font-bold text-white mt-1 leading-tight">
-              {formatWaveHeight(condition.swellHeight).meters}{' '}
-              <span className="text-xs font-black text-teal-400">
-                ({formatWaveHeight(condition.swellHeight).feet})
-              </span>
-            </div>
-            <div className="text-xs text-teal-300/80 mt-0.5">
-              {swellCompass} ({condition.swellDir}°) • {condition.swellPeriod}s
-            </div>
-          </div>
+        {(() => {
+          const wave = getWaveHeightDetails(condition.swellHeight, condition.swellPeriod);
+          return (
+            <>
+              <div className="my-4 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                  <div className="text-[11px] text-slate-400 font-semibold flex items-center justify-between">
+                    <span>Swell (Back)</span>
+                    <Waves className="w-3.5 h-3.5 text-teal-400" />
+                  </div>
+                  <div className="text-lg font-bold text-white mt-1 leading-tight">
+                    {wave.backMeters}{' '}
+                    <span className="text-xs font-black text-teal-400">
+                      ({wave.backFeet})
+                    </span>
+                  </div>
+                  <div className="text-xs text-teal-300/80 mt-0.5">
+                    {swellCompass} ({condition.swellDir}°) • {condition.swellPeriod}s
+                  </div>
+                </div>
 
-          <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
-            <div className="text-[11px] text-slate-400 font-semibold flex items-center justify-between">
-              <span>Current Wind</span>
-              <Wind className="w-3.5 h-3.5 text-sky-400" />
-            </div>
-            <div className="text-lg font-bold text-white mt-1 flex items-center justify-between">
-              <span>{condition.windSpeed} km/h</span>
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                condition.windState?.includes('Clean') || condition.windState?.includes('Glassy')
-                  ? 'bg-teal-500/20 text-teal-300'
-                  : condition.windState?.includes('Blown Out')
-                  ? 'bg-rose-500/20 text-rose-300'
-                  : condition.windState?.includes('Onshore')
-                  ? 'bg-amber-500/20 text-amber-300'
-                  : 'bg-slate-800 text-slate-300'
-              }`}>
-                {condition.windState?.replace(' / Crap', '') || 'Live'}
-              </span>
-            </div>
-            <div className="text-xs text-sky-300/80 mt-0.5">{windCompass} ({condition.windDir}°)</div>
-          </div>
+                <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                  <div className="text-[11px] text-slate-400 font-semibold flex items-center justify-between">
+                    <span>Current Wind</span>
+                    <Wind className="w-3.5 h-3.5 text-sky-400" />
+                  </div>
+                  <div className="text-lg font-bold text-white mt-1 flex items-center justify-between">
+                    <span>{condition.windSpeed} km/h</span>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      condition.windState?.includes('Clean') || condition.windState?.includes('Glassy')
+                        ? 'bg-teal-500/20 text-teal-300'
+                        : condition.windState?.includes('Blown Out')
+                        ? 'bg-rose-500/20 text-rose-300'
+                        : condition.windState?.includes('Onshore')
+                        ? 'bg-amber-500/20 text-amber-300'
+                        : 'bg-slate-800 text-slate-300'
+                    }`}>
+                      {condition.windState?.replace(' / Crap', '') || 'Live'}
+                    </span>
+                  </div>
+                  <div className="text-xs text-sky-300/80 mt-0.5">{windCompass} ({condition.windDir}°)</div>
+                </div>
 
-          <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
-            <div className="text-[11px] text-slate-400 font-semibold flex items-center justify-between">
-              <span>Tide Est.</span>
-              <Compass className="w-3.5 h-3.5 text-indigo-400" />
-            </div>
-            <div className="text-lg font-bold text-white mt-1">
-              {condition.tide != null ? `${condition.tide.toFixed(1)}m` : '0.8m'}
-            </div>
-            <div className="text-xs text-indigo-300 mt-0.5">{condition.tideTrend}</div>
-          </div>
+                <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                  <div className="text-[11px] text-slate-400 font-semibold flex items-center justify-between">
+                    <span>Tide Est.</span>
+                    <Compass className="w-3.5 h-3.5 text-indigo-400" />
+                  </div>
+                  <div className="text-lg font-bold text-white mt-1">
+                    {condition.tide != null ? `${condition.tide.toFixed(1)}m` : '0.8m'}
+                  </div>
+                  <div className="text-xs text-indigo-300 mt-0.5">{condition.tideTrend}</div>
+                </div>
 
-          <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
-            <div className="text-[11px] text-slate-400 font-semibold flex items-center justify-between">
-              <span>Water Temp</span>
-              <span className="text-teal-400 text-xs font-bold">ZA</span>
-            </div>
-            <div className="text-lg font-bold text-white mt-1">
-              {condition.waterTemp ?? 15}°C
-            </div>
-            <div className="text-xs text-slate-400 mt-0.5">Air: {condition.airTemp ?? 20}°C</div>
-          </div>
-        </div>
+                <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                  <div className="text-[11px] text-slate-400 font-semibold flex items-center justify-between">
+                    <span>Water Temp</span>
+                    <span className="text-teal-400 text-xs font-bold">ZA</span>
+                  </div>
+                  <div className="text-lg font-bold text-white mt-1">
+                    {condition.waterTemp ?? 15}°C
+                  </div>
+                  <div className="text-xs text-slate-400 mt-0.5">Air: {condition.airTemp ?? 20}°C</div>
+                </div>
+              </div>
+
+              {/* Back of Wave vs Breaking Face Scale Bar */}
+              <div className="mb-4 p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded bg-teal-500/15 text-teal-300 font-black border border-teal-500/30 text-[11px]">
+                    Rideable Face: ~{wave.faceFeet} ({wave.faceMeters})
+                  </span>
+                  <span className="text-slate-300 font-bold">
+                    • {wave.bodyScale}
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-400 flex items-center gap-1">
+                  <Info className="w-3 h-3 text-slate-500 shrink-0" />
+                  <span>
+                    Traditional SA standard: <strong>{wave.backFeet} ({wave.backMeters})</strong> back of wave.
+                  </span>
+                </div>
+              </div>
+            </>
+          );
+        })()}
 
         {/* 24-Hour Timeline Forecast Chart */}
         <div className="my-5">

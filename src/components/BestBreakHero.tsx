@@ -1,6 +1,6 @@
 import React from 'react';
 import { SurfSpot, MarineCondition, SportDiscipline, Venue } from '../types';
-import { getScoreLabel, degreesToCompass, formatWaveHeight } from '../utils/geo';
+import { getScoreLabel, degreesToCompass, getWaveHeightDetails } from '../utils/geo';
 import { Navigation, Compass, Wind, ArrowUpRight, Sparkles, Waves, Calendar, MessageSquare, Info } from 'lucide-react';
 
 interface BestBreakHeroProps {
@@ -218,22 +218,29 @@ export const BestBreakHero: React.FC<BestBreakHeroProps> = ({
       {/* Marine Metrics Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 my-5">
         {/* Swell */}
-        <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
-            <span>Swell Height</span>
-            <Waves className="w-3.5 h-3.5 text-teal-400" />
-          </div>
-          <div className="text-lg font-bold text-white tracking-tight leading-tight">
-            {formatWaveHeight(condition.swellHeight).meters}{' '}
-            <span className="text-sm font-extrabold text-teal-400">
-              ({formatWaveHeight(condition.swellHeight).feet})
-            </span>
-          </div>
-          <div className="text-[11px] text-teal-300/80 font-medium flex items-center justify-between mt-0.5">
-            <span>{swellCompass} ({condition.swellDir}°)</span>
-            <span className="text-slate-400">@{condition.swellPeriod}s</span>
-          </div>
-        </div>
+        {(() => {
+          const wave = getWaveHeightDetails(condition.swellHeight, condition.swellPeriod);
+          return (
+            <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
+                <span className="flex items-center gap-1">Swell (Back)</span>
+                <span className="text-[9px] text-teal-300 font-bold px-1.5 py-0.5 rounded bg-teal-500/10 border border-teal-500/20" title={`Shoaled breaking face: ~${wave.faceFeet} (${wave.bodyScale})`}>
+                  ~{wave.faceFeet} Face
+                </span>
+              </div>
+              <div className="text-lg font-bold text-white tracking-tight leading-tight">
+                {wave.backMeters}{' '}
+                <span className="text-sm font-extrabold text-teal-400">
+                  ({wave.backFeet})
+                </span>
+              </div>
+              <div className="text-[11px] text-teal-300/80 font-medium flex items-center justify-between mt-0.5">
+                <span>{swellCompass} ({condition.swellDir}°)</span>
+                <span className="text-slate-400">@{condition.swellPeriod}s</span>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Wind */}
         <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800">

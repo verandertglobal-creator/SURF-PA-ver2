@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { HourlyForecastItem, SportDiscipline } from '../types';
-import { formatWaveHeight, getScoreLabel } from '../utils/geo';
+import { getWaveHeightDetails, getScoreLabel } from '../utils/geo';
 import { Wind, Waves, Compass, Clock, AlertTriangle, Sparkles, Navigation } from 'lucide-react';
 
 interface HourlyForecastChartProps {
@@ -30,7 +30,7 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hourly
 
   const selected = hourly[selectedIdx] || hourly[0];
   const selectedMeta = getScoreLabel(selected.score);
-  const selectedWave = formatWaveHeight(selected.swellHeight);
+  const selectedWave = getWaveHeightDetails(selected.swellHeight, selected.period);
 
   // Maximum wave height in the timeline for proportional bars
   const maxWave = Math.max(...hourly.map(h => h.swellHeight), 1.0);
@@ -99,12 +99,12 @@ export const HourlyForecastChart: React.FC<HourlyForecastChartProps> = ({ hourly
         <div className="flex items-center gap-4 text-xs">
           <div className="text-right">
             <div className="text-[10px] text-slate-500 font-medium flex items-center justify-end gap-1">
-              <Waves className="w-3 h-3 text-teal-400" /> Swell
+              <Waves className="w-3 h-3 text-teal-400" /> Swell (Back)
             </div>
             <div className="font-bold text-slate-200">
-              {selectedWave.meters} <span className="text-teal-400 font-semibold">({selectedWave.feet})</span>
+              {selectedWave.backMeters} <span className="text-teal-400 font-semibold">({selectedWave.backFeet})</span>
             </div>
-            <div className="text-[10px] text-slate-400">{selected.period}s period</div>
+            <div className="text-[10px] text-teal-300/90 font-medium">~{selectedWave.faceFeet} Face • {selected.period}s</div>
           </div>
 
           <div className="text-right pl-3 border-l border-slate-800">

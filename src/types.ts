@@ -23,6 +23,7 @@ export interface SurfSpot {
   coastFacing?: number; // Seaward facing angle in degrees (e.g. 250° WSW for Yzerfontein)
   offshoreWindDir?: number; // True pure offshore angle (e.g. 70° ENE)
   minPeriod?: number; // Minimum period (s) required to avoid weak closing out chop
+  swellExposure?: number; // Spot wave height transmission ratio (e.g. 0.45 for sheltered Yzerfontein bay, 0.95 for exposed open coast)
   type: BreakType;
   difficulty: SpotDifficulty;
   hazards: string;
