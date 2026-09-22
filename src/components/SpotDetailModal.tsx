@@ -1,6 +1,7 @@
 import React from 'react';
 import { SurfSpot, MarineCondition, SportDiscipline, Venue } from '../types';
 import { getScoreLabel, degreesToCompass, formatWaveHeight } from '../utils/geo';
+import { HourlyForecastChart } from './HourlyForecastChart';
 import { X, Navigation, Waves, Wind, Compass, ShieldAlert, Sparkles, Calendar, MessageSquare, Bell, ArrowUpRight, Info } from 'lucide-react';
 
 interface SpotDetailModalProps {
@@ -246,10 +247,21 @@ export const SpotDetailModal: React.FC<SpotDetailModalProps> = ({
               <span>Current Wind</span>
               <Wind className="w-3.5 h-3.5 text-sky-400" />
             </div>
-            <div className="text-lg font-bold text-white mt-1">
-              {condition.windSpeed} km/h
+            <div className="text-lg font-bold text-white mt-1 flex items-center justify-between">
+              <span>{condition.windSpeed} km/h</span>
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                condition.windState?.includes('Clean') || condition.windState?.includes('Glassy')
+                  ? 'bg-teal-500/20 text-teal-300'
+                  : condition.windState?.includes('Blown Out')
+                  ? 'bg-rose-500/20 text-rose-300'
+                  : condition.windState?.includes('Onshore')
+                  ? 'bg-amber-500/20 text-amber-300'
+                  : 'bg-slate-800 text-slate-300'
+              }`}>
+                {condition.windState?.replace(' / Crap', '') || 'Live'}
+              </span>
             </div>
-            <div className="text-xs text-sky-300/80">{windCompass} ({condition.windDir}°)</div>
+            <div className="text-xs text-sky-300/80 mt-0.5">{windCompass} ({condition.windDir}°)</div>
           </div>
 
           <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
@@ -260,7 +272,7 @@ export const SpotDetailModal: React.FC<SpotDetailModalProps> = ({
             <div className="text-lg font-bold text-white mt-1">
               {condition.tide != null ? `${condition.tide.toFixed(1)}m` : '0.8m'}
             </div>
-            <div className="text-xs text-indigo-300">{condition.tideTrend}</div>
+            <div className="text-xs text-indigo-300 mt-0.5">{condition.tideTrend}</div>
           </div>
 
           <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
@@ -271,8 +283,17 @@ export const SpotDetailModal: React.FC<SpotDetailModalProps> = ({
             <div className="text-lg font-bold text-white mt-1">
               {condition.waterTemp ?? 15}°C
             </div>
-            <div className="text-xs text-slate-400">Air: {condition.airTemp ?? 20}°C</div>
+            <div className="text-xs text-slate-400 mt-0.5">Air: {condition.airTemp ?? 20}°C</div>
           </div>
+        </div>
+
+        {/* 24-Hour Timeline Forecast Chart */}
+        <div className="my-5">
+          <HourlyForecastChart
+            hourly={condition.hourlyForecast || []}
+            spotName={spot.name}
+            discipline={discipline}
+          />
         </div>
 
         {/* Spot Writeup */}
@@ -296,13 +317,22 @@ export const SpotDetailModal: React.FC<SpotDetailModalProps> = ({
 
         {/* Ideal Conditions Table */}
         <div className="my-4 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
-          <h4 className="text-xs uppercase font-extrabold tracking-wider text-slate-400 mb-2">
-            Optimal Spot Parameters ({discipline.toUpperCase()})
-          </h4>
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-xs uppercase font-extrabold tracking-wider text-slate-400">
+              Optimal Spot Parameters ({discipline.toUpperCase()})
+            </h4>
+            {spot.offshoreWindDir && (
+              <span className="text-[11px] text-teal-400 font-bold">
+                Pure Offshore: {degreesToCompass(spot.offshoreWindDir)} ({spot.offshoreWindDir}°)
+              </span>
+            )}
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
             <div>
-              <span className="text-slate-500 block">Ideal Wind:</span>
-              <span className="font-bold text-slate-200">{idealWindMin}° – {idealWindMax}°</span>
+              <span className="text-slate-500 block">Offshore Window:</span>
+              <span className="font-bold text-slate-200">
+                {degreesToCompass(idealWindMin)}–{degreesToCompass(idealWindMax)} ({idealWindMin}°–{idealWindMax}°)
+              </span>
             </div>
             <div>
               <span className="text-slate-500 block">Ideal Swell:</span>
@@ -313,8 +343,8 @@ export const SpotDetailModal: React.FC<SpotDetailModalProps> = ({
               <span className="font-bold text-slate-200">&lt; {idealWindSpeed} km/h</span>
             </div>
             <div>
-              <span className="text-slate-500 block">Best Tide:</span>
-              <span className="font-bold text-slate-200">{spot.bestTide || 'All tides'}</span>
+              <span className="text-slate-500 block">Coast Facing:</span>
+              <span className="font-bold text-slate-200">{spot.coastFacing ? `${degreesToCompass(spot.coastFacing)} (${spot.coastFacing}°)` : (spot.bestTide || 'Mid')}</span>
             </div>
           </div>
         </div>

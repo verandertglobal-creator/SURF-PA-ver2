@@ -9,12 +9,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'West Coast',
     lat: -33.3411,
     lng: 18.1611,
+    coastFacing: 250,
+    offshoreWindDir: 70,
+    minPeriod: 11,
+    
     type: 'Beachbreak',
     difficulty: 'Beginner–Intermediate',
     hazards: 'Cold Atlantic water (12–14°C) and strong rips on larger swells. Keep clear of boat launch slipway.',
     bestTide: 'Mid',
     ideal: {
-      surf: [135, 225, 1.6, 18],
+      surf: [50, 130, 1.6, 18],
       bodyboard: [135, 225, 1.3, 18],
       kite: [170, 0, 0.4, 28]
     },
@@ -27,12 +31,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'West Coast',
     lat: -33.348,
     lng: 18.151,
+    coastFacing: 245,
+    offshoreWindDir: 65,
+    minPeriod: 11,
+    
     type: 'Slab wedge',
     difficulty: 'Advanced',
     hazards: 'Shallow urchin-encrusted kelp reef shelf and heavy sucking wedge. Know your exit before paddling out.',
     bestTide: 'Low',
     ideal: {
-      surf: [135, 225, 2.0, 14],
+      surf: [45, 125, 2, 15],
       bodyboard: [135, 225, 1.6, 15],
       kite: [150, 0, 0.3, 30]
     },
@@ -45,12 +53,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'West Coast',
     lat: -32.315,
     lng: 18.325,
+    coastFacing: 320,
+    offshoreWindDir: 140,
+    minPeriod: 12,
+    
     type: 'Point break',
     difficulty: 'Advanced',
     hazards: 'Long paddle against the rip, kelp beds, shallow rock section at Baboon Point.',
     bestTide: 'Low',
     ideal: {
-      surf: [110, 180, 2.2, 16],
+      surf: [120, 165, 2.2, 18],
       bodyboard: [110, 180, 1.8, 16],
       kite: [180, 240, 0.5, 25]
     },
@@ -63,12 +75,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'West Coast',
     lat: -32.81,
     lng: 17.89,
+    coastFacing: 270,
+    offshoreWindDir: 90,
+    minPeriod: 11,
+    
     type: 'Beachbreak',
     difficulty: 'Intermediate',
     hazards: 'Cold water, granite boulders, isolated coastline.',
     bestTide: 'Mid',
     ideal: {
-      surf: [130, 220, 1.7, 16],
+      surf: [70, 130, 1.7, 16],
       bodyboard: [130, 220, 1.4, 18],
       kite: [160, 210, 0.4, 28]
     },
@@ -83,12 +99,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Table Bay',
     lat: -33.725,
     lng: 18.442,
+    coastFacing: 260,
+    offshoreWindDir: 80,
+    minPeriod: 11,
+    
     type: 'Beachbreak',
     difficulty: 'Beginner–Intermediate',
     hazards: 'Heavy dumping shorebreak at high tide and cold water currents.',
     bestTide: 'Mid',
     ideal: {
-      surf: [135, 240, 1.6, 17],
+      surf: [60, 130, 1.6, 17],
       bodyboard: [135, 240, 1.3, 17],
       kite: [155, 0, 0.3, 29]
     },
@@ -101,12 +121,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Table Bay',
     lat: -33.765,
     lng: 18.455,
+    coastFacing: 260,
+    offshoreWindDir: 80,
+    minPeriod: 11,
+    
     type: 'Beachbreak',
     difficulty: 'Intermediate',
     hazards: 'Punchy heavy shorebreak and sudden sweep currents.',
     bestTide: 'Mid',
     ideal: {
-      surf: [135, 225, 1.5, 16],
+      surf: [60, 130, 1.5, 16],
       bodyboard: [135, 225, 1.1, 16],
       kite: [150, 0, 0.4, 30]
     },
@@ -119,12 +143,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Table Bay',
     lat: -33.79,
     lng: 18.46,
+    coastFacing: 260,
+    offshoreWindDir: 80,
+    minPeriod: 11,
+    
     type: 'Beachbreak',
     difficulty: 'Beginner–Intermediate',
     hazards: 'Crowds on weekends, submerged rocks around the island.',
     bestTide: 'All tides',
     ideal: {
-      surf: [140, 230, 1.4, 18],
+      surf: [60, 130, 1.4, 18],
       bodyboard: [140, 230, 1.2, 18],
       kite: [160, 220, 0.4, 32]
     },
@@ -139,12 +167,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Cape Peninsula',
     lat: -34.01,
     lng: 18.34,
+    coastFacing: 250,
+    offshoreWindDir: 70,
+    minPeriod: 12,
+    
     type: 'Beachbreak',
     difficulty: 'Advanced',
     hazards: 'Shallow sandbars, intense backwash off granite boulders, freezing 10–13°C upwelling.',
     bestTide: 'Low',
     ideal: {
-      surf: [110, 190, 1.8, 15],
+      surf: [60, 130, 1.8, 15],
       bodyboard: [110, 190, 1.5, 15],
       kite: [140, 190, 0.3, 24]
     },
@@ -157,12 +189,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Cape Peninsula',
     lat: -34.058,
     lng: 18.342,
+    coastFacing: 220,
+    offshoreWindDir: 40,
+    minPeriod: 15,
+    
     type: 'Big-wave reef',
     difficulty: 'Expert',
     hazards: 'Massive 15–30ft+ open-ocean waves, seal island nearby, heavy hold-downs. Jet-ski tow and safety vests compulsory.',
     bestTide: 'Low',
     ideal: {
-      surf: [135, 225, 4.5, 14],
+      surf: [30, 110, 4.5, 14],
       bodyboard: [135, 225, 3.5, 14],
       kite: [160, 0, 0.2, 25]
     },
@@ -175,12 +211,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Cape Peninsula',
     lat: -34.14,
     lng: 18.32,
+    coastFacing: 250,
+    offshoreWindDir: 70,
+    minPeriod: 12,
+    
     type: 'Beachbreak',
     difficulty: 'Intermediate',
     hazards: 'Crowded peak, ripping currents, thick kelp beds at the ends.',
     bestTide: 'Mid',
     ideal: {
-      surf: [120, 200, 1.8, 14],
+      surf: [60, 130, 1.8, 14],
       bodyboard: [120, 200, 1.4, 15],
       kite: [160, 210, 0.3, 26]
     },
@@ -193,12 +233,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Cape Peninsula',
     lat: -34.15,
     lng: 18.32,
+    coastFacing: 240,
+    offshoreWindDir: 60,
+    minPeriod: 13,
+    
     type: 'Reef',
     difficulty: 'Advanced',
     hazards: 'Shallow kelp reef, long paddle out through channels, heavy boil sections.',
     bestTide: 'High',
     ideal: {
-      surf: [120, 190, 2.8, 14],
+      surf: [50, 120, 2.8, 14],
       bodyboard: [120, 190, 2.2, 14],
       kite: [160, 200, 0.3, 26]
     },
@@ -211,13 +255,17 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Cape Peninsula',
     lat: -34.1081,
     lng: 18.4721,
+    coastFacing: 160,
+    offshoreWindDir: 340,
+    minPeriod: 9,
+    
     type: 'Beachbreak',
     difficulty: 'Beginner',
     hazards: 'Busy lineups with beginners and surf schools. Shark Spotters flag active daily.',
     sharkSpotters: true,
     bestTide: 'All tides',
     ideal: {
-      surf: [315, 195, 1.2, 16],
+      surf: [310, 30, 1.2, 16],
       bodyboard: [315, 195, 0.9, 16],
       kite: [160, 0, 0.3, 25]
     },
@@ -230,12 +278,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Cape Peninsula',
     lat: -34.1275,
     lng: 18.4483,
-    type: 'Reef left',
+        type: 'Reef left',
     difficulty: 'Advanced',
     hazards: 'Very shallow exposed reef shelf, harbor wall backwash, tight takeoff spot.',
     bestTide: 'High',
     ideal: {
-      surf: [315, 205, 1.8, 13],
+      surf: [290, 340, 1.8, 13],
       bodyboard: [315, 205, 1.4, 13],
       kite: [160, 0, 0.2, 24]
     },
@@ -250,12 +298,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Overberg',
     lat: -34.24,
     lng: 18.79,
-    type: 'Beachbreak',
+        type: 'Beachbreak',
     difficulty: 'Advanced',
     hazards: 'Heavy dumping shorebreak, steep sand shelf, strong rip currents.',
     bestTide: 'Low',
     ideal: {
-      surf: [300, 45, 1.8, 16],
+      surf: [60, 130, 1.8, 16],
       bodyboard: [300, 45, 1.5, 17],
       kite: [160, 220, 0.4, 28]
     },
@@ -268,12 +316,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Overberg',
     lat: -34.42,
     lng: 19.15,
+    coastFacing: 190,
+    offshoreWindDir: 10,
+    minPeriod: 11,
+    
     type: 'Reef',
     difficulty: 'Intermediate',
     hazards: 'River mouth current, rocky ledge, local crowd.',
     bestTide: 'Mid',
     ideal: {
-      surf: [310, 40, 1.7, 15],
+      surf: [340, 40, 1.7, 15],
       bodyboard: [310, 40, 1.3, 16],
       kite: [170, 230, 0.4, 27]
     },
@@ -288,12 +340,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Garden Route',
     lat: -34.18,
     lng: 22.15,
+    coastFacing: 70,
+    offshoreWindDir: 250,
+    minPeriod: 12,
+    
     type: 'Reef',
     difficulty: 'Advanced',
     hazards: 'Sharp rocky point entry/exit, urchins, boil rocks.',
     bestTide: 'Low',
     ideal: {
-      surf: [270, 340, 2.2, 14],
+      surf: [230, 280, 2.2, 14],
       bodyboard: [270, 340, 1.6, 14],
       kite: [170, 240, 0.4, 25]
     },
@@ -306,12 +362,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Garden Route',
     lat: -33.987,
     lng: 22.548,
-    type: 'Point left',
+        type: 'Point left',
     difficulty: 'Intermediate',
     hazards: 'Point rocks on takeoff, narrow cove with high surfer density.',
     bestTide: 'Mid',
     ideal: {
-      surf: [325, 210, 1.6, 15],
+      surf: [315, 25, 1.6, 15],
       bodyboard: [325, 210, 1.2, 15],
       kite: [170, 0, 0.3, 28]
     },
@@ -324,12 +380,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Garden Route',
     lat: -33.99,
     lng: 22.59,
-    type: 'Beachbreak',
+        type: 'Beachbreak',
     difficulty: 'Intermediate',
     hazards: 'Strong undercurrents and shifting offshore sandbanks.',
     bestTide: 'Low',
     ideal: {
-      surf: [320, 20, 1.5, 16],
+      surf: [330, 30, 1.5, 16],
       bodyboard: [320, 20, 1.2, 16],
       kite: [170, 240, 0.4, 28]
     },
@@ -342,12 +398,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Garden Route',
     lat: -34.08,
     lng: 22.97,
-    type: 'Point break',
+        type: 'Point break',
     difficulty: 'Beginner–Intermediate',
     hazards: 'Sand spit sweep, shallow entry stones.',
     bestTide: 'Mid',
     ideal: {
-      surf: [300, 360, 1.6, 15],
+      surf: [265, 320, 1.6, 15],
       bodyboard: [300, 360, 1.2, 15],
       kite: [180, 230, 0.4, 25]
     },
@@ -360,12 +416,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Garden Route',
     lat: -34.05,
     lng: 23.37,
+    coastFacing: 100,
+    offshoreWindDir: 280,
+    minPeriod: 10,
+    
     type: 'Beachbreak',
     difficulty: 'Intermediate',
     hazards: 'Keurbooms river mouth currents and shifting banks.',
     bestTide: 'Mid',
     ideal: {
-      surf: [270, 330, 1.5, 16],
+      surf: [255, 310, 1.5, 16],
       bodyboard: [270, 330, 1.2, 16],
       kite: [170, 220, 0.4, 28]
     },
@@ -380,12 +440,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Eastern Cape',
     lat: -34.035,
     lng: 24.93,
-    type: 'Right point',
+        type: 'Right point',
     difficulty: 'Advanced',
     hazards: 'Sharp urchin-riddled mussel reef, fast down-the-line speed required, competitive local and pro crowd.',
     bestTide: 'Low',
     ideal: {
-      surf: [225, 290, 2.0, 14],
+      surf: [260, 320, 2, 18],
       bodyboard: [225, 290, 1.5, 14],
       kite: [160, 0, 0.3, 27]
     },
@@ -398,12 +458,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Eastern Cape',
     lat: -34.045,
     lng: 24.925,
-    type: 'Right point',
+        type: 'Right point',
     difficulty: 'Beginner–Intermediate',
     hazards: 'Slippery stones on entry, drift down to Albatross.',
     bestTide: 'All tides',
     ideal: {
-      surf: [220, 290, 1.5, 15],
+      surf: [260, 320, 1.5, 16],
       bodyboard: [220, 290, 1.1, 15],
       kite: [160, 0, 0.3, 27]
     },
@@ -416,12 +476,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Eastern Cape',
     lat: -34.20,
     lng: 24.84,
+    coastFacing: 140,
+    offshoreWindDir: 320,
+    minPeriod: 12,
+    
     type: 'Right point',
     difficulty: 'Advanced',
     hazards: 'Rocky shelf takeoff, lighthouse reef boil, strong sea winds.',
     bestTide: 'Low',
     ideal: {
-      surf: [260, 330, 1.8, 14],
+      surf: [280, 340, 1.8, 15],
       bodyboard: [260, 330, 1.4, 15],
       kite: [170, 220, 0.4, 28]
     },
@@ -434,12 +498,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Eastern Cape',
     lat: -32.99,
     lng: 27.95,
+    coastFacing: 120,
+    offshoreWindDir: 300,
+    minPeriod: 12,
+    
     type: 'Reef',
     difficulty: 'Advanced',
     hazards: 'Urchin reef, long paddle across the deep channel, shark activity warnings.',
     bestTide: 'Mid',
     ideal: {
-      surf: [270, 340, 2.0, 15],
+      surf: [270, 330, 2, 15],
       bodyboard: [270, 340, 1.5, 16],
       kite: [170, 220, 0.4, 27]
     },
@@ -454,6 +522,10 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Wild Coast',
     lat: -31.98,
     lng: 29.15,
+    coastFacing: 110,
+    offshoreWindDir: 290,
+    minPeriod: 11,
+    
     type: 'Beachbreak',
     difficulty: 'Intermediate',
     hazards: 'Remote location, river mouth current, minimal medical infrastructure nearby.',
@@ -472,12 +544,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'Wild Coast',
     lat: -31.24,
     lng: 29.64,
+    coastFacing: 110,
+    offshoreWindDir: 290,
+    minPeriod: 12,
+    
     type: 'Point break',
     difficulty: 'Advanced',
     hazards: 'Remote dirt road access, point rocks, no surf shops nearby (bring your own wax & dings kit).',
     bestTide: 'Low',
     ideal: {
-      surf: [270, 340, 1.8, 14],
+      surf: [265, 325, 1.8, 15],
       bodyboard: [270, 340, 1.3, 14],
       kite: [180, 240, 0.4, 26]
     },
@@ -492,12 +568,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'KwaZulu-Natal',
     lat: -29.8521,
     lng: 31.041,
-    type: 'Pier sandbar',
+        type: 'Pier sandbar',
     difficulty: 'Intermediate',
     hazards: 'Concrete pier pilings, strong sweep on bigger swells, competitive lineup.',
     bestTide: 'Mid',
     ideal: {
-      surf: [290, 170, 1.6, 18],
+      surf: [250, 305, 1.6, 18],
       bodyboard: [290, 170, 1.2, 18],
       kite: [160, 0, 0.4, 28]
     },
@@ -510,12 +586,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'KwaZulu-Natal',
     lat: -29.85,
     lng: 31.04,
+    coastFacing: 95,
+    offshoreWindDir: 275,
+    minPeriod: 10,
+    
     type: 'Beachbreak',
     difficulty: 'Intermediate',
     hazards: 'Crowded Golden Mile lineup, pier current.',
     bestTide: 'Mid',
     ideal: {
-      surf: [280, 180, 1.5, 17],
+      surf: [250, 305, 1.5, 17],
       bodyboard: [280, 180, 1.2, 17],
       kite: [160, 210, 0.4, 29]
     },
@@ -528,12 +608,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'KwaZulu-Natal',
     lat: -29.54,
     lng: 31.21,
+    coastFacing: 110,
+    offshoreWindDir: 290,
+    minPeriod: 10,
+    
     type: 'Beachbreak',
     difficulty: 'Intermediate',
     hazards: 'Shifting bank rip currents, sandbar dump at high tide.',
     bestTide: 'Low',
     ideal: {
-      surf: [280, 160, 1.6, 16],
+      surf: [260, 320, 1.6, 16],
       bodyboard: [280, 160, 1.3, 16],
       kite: [170, 220, 0.4, 28]
     },
@@ -546,12 +630,12 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'KwaZulu-Natal',
     lat: -29.50,
     lng: 31.24,
-    type: 'Reef',
+        type: 'Reef',
     difficulty: 'Advanced',
     hazards: 'Tidal reef shelf, backwash off main rock.',
     bestTide: 'Mid',
     ideal: {
-      surf: [280, 150, 1.7, 15],
+      surf: [260, 320, 1.7, 15],
       bodyboard: [280, 150, 1.4, 16],
       kite: [170, 220, 0.4, 28]
     },
@@ -564,12 +648,16 @@ export const SURF_SPOTS: SurfSpot[] = [
     region: 'KwaZulu-Natal',
     lat: -30.28,
     lng: 30.75,
+    coastFacing: 90,
+    offshoreWindDir: 270,
+    minPeriod: 11,
+    
     type: 'Point break',
     difficulty: 'Intermediate',
     hazards: 'River mouth sand sweep and occasional shark advisories.',
     bestTide: 'Low',
     ideal: {
-      surf: [290, 160, 1.7, 16],
+      surf: [240, 300, 1.7, 16],
       bodyboard: [290, 160, 1.2, 16],
       kite: [170, 230, 0.4, 27]
     },

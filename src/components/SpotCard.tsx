@@ -169,6 +169,21 @@ export const SpotCard: React.FC<SpotCardProps> = ({
           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700">
             {spot.bestTide ? `Best @ ${spot.bestTide}` : 'Mid tide'}
           </span>
+          {condition.windState && (
+            <span
+              className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
+                condition.windState.includes('Clean') || condition.windState.includes('Glassy')
+                  ? 'bg-teal-500/15 text-teal-300 border-teal-500/30'
+                  : condition.windState.includes('Blown Out')
+                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                  : condition.windState.includes('Onshore')
+                  ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                  : 'bg-slate-800 text-slate-300 border-slate-700'
+              }`}
+            >
+              {condition.windState.replace(' / Crap', '')}
+            </span>
+          )}
           {spot.sharkSpotters && (
             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               🦈 Shark Spotters
@@ -199,7 +214,28 @@ export const SpotCard: React.FC<SpotCardProps> = ({
           <div className="font-bold text-slate-200 mt-0.5">
             {condition.windSpeed} <span className="text-[10px] text-slate-400">km/h</span>
           </div>
-          <div className="text-[10px] text-slate-400">{windCompass}</div>
+          <div className="text-[10px] text-slate-400 flex items-center justify-between">
+            <span>{windCompass}</span>
+            <span
+              className={`text-[9px] font-bold truncate max-w-[50px] ${
+                condition.windState?.includes('Clean') || condition.windState?.includes('Glassy')
+                  ? 'text-teal-400'
+                  : condition.windState?.includes('Blown Out')
+                  ? 'text-rose-400'
+                  : 'text-slate-400'
+              }`}
+            >
+              {condition.windState?.includes('Clean')
+                ? 'Offshore'
+                : condition.windState?.includes('Blown Out')
+                ? 'Blown'
+                : condition.windState?.includes('Onshore')
+                ? 'Onshore'
+                : condition.windState?.includes('Glassy')
+                ? 'Glassy'
+                : 'Cross'}
+            </span>
+          </div>
         </div>
 
         <div className="bg-slate-950/40 p-2 rounded-lg border border-slate-800/60">

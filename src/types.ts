@@ -20,6 +20,9 @@ export interface SurfSpot {
   region: RegionKey;
   lat: number;
   lng: number;
+  coastFacing?: number; // Seaward facing angle in degrees (e.g. 250° WSW for Yzerfontein)
+  offshoreWindDir?: number; // True pure offshore angle (e.g. 70° ENE)
+  minPeriod?: number; // Minimum period (s) required to avoid weak closing out chop
   type: BreakType;
   difficulty: SpotDifficulty;
   hazards: string;
@@ -32,17 +35,37 @@ export interface SurfSpot {
   rating?: number;
 }
 
+export interface HourlyForecastItem {
+  time: string;
+  hour: number;
+  label: string;
+  waveHeight: number;
+  swellHeight: number;
+  period: number;
+  windSpeed: number;
+  windDir: number;
+  windCompass: string;
+  windState: 'Offshore (Clean)' | 'Glassy' | 'Cross-offshore' | 'Cross-shore' | 'Onshore (Choppy)' | 'Blown Out / Crap';
+  score: number;
+  tide: number | null;
+}
+
 export interface MarineCondition {
   swellHeight: number;
   swellPeriod: number;
   swellDir: number;
+  waveHeight?: number;
+  windWaveHeight?: number;
   windSpeed: number;
   windDir: number;
+  windGusts?: number;
+  windState?: 'Offshore (Clean)' | 'Glassy' | 'Cross-offshore' | 'Cross-shore' | 'Onshore (Choppy)' | 'Blown Out / Crap';
   tide: number | null;
   tideTrend: 'Rising' | 'Falling' | 'Stable';
   airTemp?: number;
   waterTemp?: number;
   timestamp?: string;
+  hourlyForecast?: HourlyForecastItem[];
 }
 
 export type SponsorTier = 'gold' | 'silver' | 'bronze';
